@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Química I - Lab Inmersivo</title>
+    
+    <!-- Bootstrap 5 CSS (CDN) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- 3Dmol.js CDN -->
+    <script src="https://3dmol.org/build/3Dmol-min.js"></script>
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-dark text-light">
+    <!-- Navbar Superior -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary border-bottom border-secondary">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="bi bi-flask"></i> Química I - Lab Inmersivo
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <!-- Selector de Modo -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="modeDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-badge"></i> <span id="currentMode">Modo Estudiante</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item active" href="#" data-mode="student"><i class="bi bi-mortarboard"></i> Modo Estudiante</a></li>
+                            <li><a class="dropdown-item" href="#" data-mode="professor"><i class="bi bi-briefcase"></i> Modo Profesor</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenedor Principal -->
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar Izquierdo -->
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-secondary sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" data-section="molecules">
+                                <i class="bi bi-box"></i> Geometría Molecular
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-section="acids">
+                                <i class="bi bi-droplet"></i> Ácidos, Bases y Sales
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-section="equilibrium">
+                                <i class="bi bi-graph-up-arrow"></i> Equilibrio Iónico
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-section="tutor">
+                                <i class="bi bi-chat-dots"></i> Tutor IA
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <!-- Panel de Profesor (oculto por defecto) -->
+                    <div id="professorPanel" class="mt-4 p-3 bg-dark rounded d-none">
+                        <h6 class="text-warning"><i class="bi bi-gear"></i> Panel Profesor</h6>
+                        <hr class="border-secondary">
+                        <small class="text-muted">Configuración API:</small>
+                        <div class="form-check form-switch mt-2">
+                            <input class="form-check-input" type="checkbox" id="debugMode">
+                            <label class="form-check-label" for="debugMode">Modo Debug</label>
+                        </div>
+                        <div class="mt-2">
+                            <small class="text-muted d-block">Estado API:</small>
+                            <span id="apiStatus" class="badge bg-secondary">Desconectado</span>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Contenido Principal -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                <!-- Sección: Geometría Molecular -->
+                <section id="molecules-section" class="content-section">
+                    <h2 class="mb-4"><i class="bi bi-box"></i> Geometría Molecular 3D</h2>
+                    <p class="lead text-muted">Explora las geometrías moleculares usando la teoría VSEPR</p>
+                    
+                    <div class="row">
+                        <!-- Lista de Moléculas -->
+                        <div class="col-md-4">
+                            <div class="card bg-dark border-secondary">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="bi bi-list-ul"></i> Moléculas</h5>
+                                </div>
+                                <div class="card-body p-0" style="max-height: 500px; overflow-y: auto;">
+                                    <div id="moleculesList" class="list-group list-group-flush">
+                                        <!-- Se llena dinámicamente con JS -->
+                                        <div class="text-center p-3">
+                                            <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                                <span class="visually-hidden">Cargando...</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Visor 3D -->
+                        <div class="col-md-8">
+                            <div class="card bg-dark border-secondary mb-3">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0"><i class="bi bi-eye"></i> Visor 3D</h5>
+                                    <span id="moleculeTitle" class="badge bg-primary">Selecciona una molécula</span>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div id="gldiv" style="width: 100%; height: 400px; position: relative;"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Información de la Molécula -->
+                            <div id="moleculeInfo" class="card bg-dark border-secondary d-none">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="bi bi-info-circle"></i> Información</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p><strong>Fórmula:</strong> <span id="infoFormula"></span></p>
+                                            <p><strong>Nombre:</strong> <span id="infoName"></span></p>
+                                            <p><strong>Geometría:</strong> <span id="infoGeometry" class="badge bg-info"></span></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><strong>Ángulo:</strong> <span id="infoAngle"></span></p>
+                                            <p><strong>Pares Enlazantes:</strong> <span id="infoBonding" class="badge bg-success"></span></p>
+                                            <p><strong>Pares Solitarios:</strong> <span id="infoLone" class="badge bg-warning text-dark"></span></p>
+                                        </div>
+                                    </div>
+                                    <hr class="border-secondary">
+                                    <p class="mb-0"><strong>Ejemplos:</strong> <span id="infoExamples" class="text-muted"></span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sección: Ácidos, Bases y Sales -->
+                <section id="acids-section" class="content-section d-none">
+                    <h2 class="mb-4"><i class="bi bi-droplet"></i> Ácidos, Bases y Sales</h2>
+                    <p class="lead text-muted">Conceptos fundamentales de química ácido-base</p>
+                    
+                    <div class="accordion" id="acidsAccordion">
+                        <!-- Ácidos -->
+                        <div class="accordion-item bg-dark border-secondary">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button bg-secondary text-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAcids">
+                                    <strong>Ácidos</strong>
+                                </button>
+                            </h2>
+                            <div id="collapseAcids" class="accordion-collapse collapse show" data-bs-parent="#acidsAccordion">
+                                <div class="accordion-body">
+                                    <h5>Definición</h5>
+                                    <p>Sustancias que donan protones (H⁺) en solución acuosa o aceptan pares de electrones.</p>
+                                    
+                                    <h5>Propiedades</h5>
+                                    <ul>
+                                        <li>Sabor agrio</li>
+                                        <li>Cambian el papel tornasol a rojo</li>
+                                        <li>Reaccionan con bases formando sales y agua</li>
+                                        <li>pH &lt; 7</li>
+                                    </ul>
+                                    
+                                    <h5>Clasificación</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-dark table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Tipo</th>
+                                                    <th>Ejemplo</th>
+                                                    <th>Fórmula</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Ácido fuerte</td>
+                                                    <td>Ácido clorhídrico</td>
+                                                    <td>HCl</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Ácido débil</td>
+                                                    <td>Ácido acético</td>
+                                                    <td>CH₃COOH</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Oxiácido</td>
+                                                    <td>Ácido sulfúrico</td>
+                                                    <td>H₂SO₄</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Bases -->
+                        <div class="accordion-item bg-dark border-secondary">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-secondary text-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBases">
+                                    <strong>Bases</strong>
+                                </button>
+                            </h2>
+                            <div id="collapseBases" class="accordion-collapse collapse" data-bs-parent="#acidsAccordion">
+                                <div class="accordion-body">
+                                    <h5>Definición</h5>
+                                    <p>Sustancias que aceptan protones (H⁺) en solución acuosa o donan pares de electrones.</p>
+                                    
+                                    <h5>Propiedades</h5>
+                                    <ul>
+                                        <li>Sabor amargo</li>
+                                        <li>Al tacto son resbaladizas</li>
+                                        <li>Cambian el papel tornasol a azul</li>
+                                        <li>pH &gt; 7</li>
+                                    </ul>
+                                    
+                                    <h5>Clasificación</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-dark table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Tipo</th>
+                                                    <th>Ejemplo</th>
+                                                    <th>Fórmula</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Base fuerte</td>
+                                                    <td>Hidróxido de sodio</td>
+                                                    <td>NaOH</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Base débil</td>
+                                                    <td>Amoníaco</td>
+                                                    <td>NH₃</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Sales -->
+                        <div class="accordion-item bg-dark border-secondary">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-secondary text-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSalts">
+                                    <strong>Sales</strong>
+                                </button>
+                            </h2>
+                            <div id="collapseSalts" class="accordion-collapse collapse" data-bs-parent="#acidsAccordion">
+                                <div class="accordion-body">
+                                    <h5>Definición</h5>
+                                    <p>Compuestos iónicos formados por la reacción entre un ácido y una base.</p>
+                                    
+                                    <h5>Formación</h5>
+                                    <p class="fst-italic">Ácido + Base → Sal + Agua</p>
+                                    <p>Ejemplo: HCl + NaOH → NaCl + H₂O</p>
+                                    
+                                    <h5>Tipos de Sales</h5>
+                                    <ul>
+                                        <li><strong>Sal neutra:</strong> Proviene de ácido fuerte y base fuerte (NaCl)</li>
+                                        <li><strong>Sal ácida:</strong> Proviene de ácido fuerte y base débil (NH₄Cl)</li>
+                                        <li><strong>Sal básica:</strong> Proviene de ácido débil y base fuerte (CH₃COONa)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sección: Equilibrio Iónico -->
+                <section id="equilibrium-section" class="content-section d-none">
+                    <h2 class="mb-4"><i class="bi bi-graph-up-arrow"></i> Equilibrio Iónico</h2>
+                    <p class="lead text-muted">Estudio del equilibrio en soluciones de electrolitos</p>
+                    
+                    <ul class="nav nav-tabs" id="equilibriumTabs" role="tablist">
+                        <li class="nav-item">
+                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#waterTab">Ionización del Agua</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#kaKbTab">Constante Ka/Kb</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#phTab">pH y pOH</button>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content bg-dark border border-top-0 border-secondary p-4" id="equilibriumTabContent">
+                        <!-- Ionización del Agua -->
+                        <div class="tab-pane fade show active" id="waterTab">
+                            <h4>Autoionización del Agua</h4>
+                            <p>El agua se ioniza ligeramente según la ecuación:</p>
+                            <div class="alert alert-info">
+                                <p class="mb-0 text-center fs-5">
+                                    2H₂O ⇌ H₃O⁺ + OH⁻
+                                </p>
+                            </div>
+                            
+                            <h5 class="mt-4">Producto Iónico del Agua (Kw)</h5>
+                            <p>A 25°C:</p>
+                            <div class="alert alert-success">
+                                <p class="mb-0 text-center fs-4">
+                                    K<sub>w</sub> = [H₃O⁺][OH⁻] = 1.0 × 10⁻¹⁴
+                                </p>
+                            </div>
+                            
+                            <table class="table table-dark table-bordered mt-4">
+                                <thead>
+                                    <tr>
+                                        <th>Tipo de Solución</th>
+                                        <th>[H₃O⁺]</th>
+                                        <th>[OH⁻]</th>
+                                        <th>pH</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Neutra</td>
+                                        <td>1.0 × 10⁻⁷ M</td>
+                                        <td>1.0 × 10⁻⁷ M</td>
+                                        <td>7.0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Ácida</td>
+                                        <td>&gt; 1.0 × 10⁻⁷ M</td>
+                                        <td>&lt; 1.0 × 10⁻⁷ M</td>
+                                        <td>&lt; 7.0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Básica</td>
+                                        <td>&lt; 1.0 × 10⁻⁷ M</td>
+                                        <td>&gt; 1.0 × 10⁻⁷ M</td>
+                                        <td>&gt; 7.0</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Constante Ka/Kb -->
+                        <div class="tab-pane fade" id="kaKbTab">
+                            <h4>Constante de Acidez (Ka)</h4>
+                            <p>Para un ácido débil HA:</p>
+                            <div class="alert alert-info">
+                                <p class="mb-0 text-center fs-5">
+                                    HA ⇌ H⁺ + A⁻
+                                </p>
+                            </div>
+                            <div class="alert alert-success mt-3">
+                                <p class="mb-0 text-center fs-5">
+                                    K<sub>a</sub> = [H⁺][A⁻] / [HA]
+                                </p>
+                            </div>
+                            
+                            <h4 class="mt-4">Constante de Basicidad (Kb)</h4>
+                            <p>Para una base débil B:</p>
+                            <div class="alert alert-info">
+                                <p class="mb-0 text-center fs-5">
+                                    B + H₂O ⇌ BH⁺ + OH⁻
+                                </p>
+                            </div>
+                            <div class="alert alert-success mt-3">
+                                <p class="mb-0 text-center fs-5">
+                                    K<sub>b</sub> = [BH⁺][OH⁻] / [B]
+                                </p>
+                            </div>
+                            
+                            <h5 class="mt-4">Relación Ka-Kb</h5>
+                            <div class="alert alert-warning">
+                                <p class="mb-0 text-center fs-5">
+                                    K<sub>a</sub> × K<sub>b</sub> = K<sub>w</sub> = 1.0 × 10⁻¹⁴
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- pH y pOH -->
+                        <div class="tab-pane fade" id="phTab">
+                            <h4>Escala de pH</h4>
+                            <p>El pH mide la acidez o basicidad de una solución:</p>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="alert alert-danger">
+                                        <h5>pH</h5>
+                                        <p class="mb-0 fs-5">pH = -log[H⁺]</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="alert alert-primary">
+                                        <h5>pOH</h5>
+                                        <p class="mb-0 fs-5">pOH = -log[OH⁻]</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-info mt-4">
+                                <p class="mb-0 text-center fs-5">
+                                    pH + pOH = 14 (a 25°C)
+                                </p>
+                            </div>
+                            
+                            <h5 class="mt-4">Escala de pH</h5>
+                            <div class="progress mb-3" style="height: 30px;">
+                                <div class="progress-bar bg-danger" role="progressbar" style="width: 33%">Ácido (0-6)</div>
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 14%">Neutro (7)</div>
+                                <div class="progress-bar bg-primary" role="progressbar" style="width: 33%">Básico (8-14)</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sección: Tutor IA -->
+                <section id="tutor-section" class="content-section d-none">
+                    <h2 class="mb-4"><i class="bi bi-chat-dots"></i> Tutor de Química IA</h2>
+                    <p class="lead text-muted">Pregunta cualquier duda sobre química y recibe ayuda inteligente</p>
+                    
+                    <div class="card bg-dark border-secondary">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="bi bi-robot"></i> Chat con el Tutor</h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Área de mensajes -->
+                            <div id="chatMessages" class="mb-3" style="height: 400px; overflow-y: auto; border: 1px solid #444; border-radius: 5px; padding: 15px;">
+                                <div class="text-center text-muted">
+                                    <i class="bi bi-chat-square-text fs-1"></i>
+                                    <p class="mt-2">Inicia una conversación con el tutor de química</p>
+                                    <small>Ejemplo: "¿Qué es la geometría molecular?"</small>
+                                </div>
+                            </div>
+                            
+                            <!-- Input de mensaje -->
+                            <div class="input-group">
+                                <input type="text" id="chatInput" class="form-control bg-dark text-light border-secondary" 
+                                       placeholder="Escribe tu pregunta aquí..." aria-label="Mensaje">
+                                <button class="btn btn-primary" type="button" id="sendBtn">
+                                    <i class="bi bi-send"></i> Enviar
+                                </button>
+                                <button class="btn btn-secondary" type="button" id="clearBtn">
+                                    <i class="bi bi-trash"></i> Limpiar
+                                </button>
+                            </div>
+                            
+                            <!-- Spinner de carga -->
+                            <div id="loadingSpinner" class="text-center mt-3 d-none">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Cargando...</span>
+                                </div>
+                                <p class="mt-2 text-muted">El tutor está pensando...</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Scripts de la aplicación -->
+    <script src="js/app.js"></script>
+    <script src="js/molecules.js"></script>
+    <script src="js/chat.js"></script>
+</body>
+</html>

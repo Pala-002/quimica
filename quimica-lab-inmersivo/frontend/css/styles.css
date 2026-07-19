@@ -1,0 +1,315 @@
+/**
+ * Estilos personalizados para Química I - Lab Inmersivo
+ * Complementa Bootstrap 5 con estilos específicos para la aplicación
+ */
+
+/* Variables de color personalizadas */
+:root {
+    --primary-dark: #0d6efd;
+    --secondary-dark: #6c757d;
+    --success-dark: #198754;
+    --info-dark: #0dcaf0;
+    --warning-dark: #ffc107;
+    --danger-dark: #dc3545;
+    --bg-dark: #212529;
+    --bg-darker: #1a1d20;
+    --border-color: #495057;
+}
+
+/* Estilos generales */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-dark);
+    color: #f8f9fa;
+}
+
+/* Sidebar personalizado */
+.sidebar {
+    background: linear-gradient(180deg, #2c3034 0%, #1a1d20 100%);
+    min-height: calc(100vh - 56px);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar .nav-link {
+    color: #adb5bd;
+    padding: 0.75rem 1rem;
+    margin: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
+    transition: all 0.3s ease;
+}
+
+.sidebar .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transform: translateX(5px);
+}
+
+.sidebar .nav-link.active {
+    background-color: var(--primary-dark);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(13, 110, 253, 0.4);
+}
+
+.sidebar .nav-link i {
+    margin-right: 0.5rem;
+}
+
+/* Cards personalizadas */
+.card {
+    background-color: var(--bg-darker);
+    border-color: var(--border-color);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.card-header {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-bottom-color: var(--border-color);
+}
+
+/* Lista de moléculas */
+.list-group-item {
+    background-color: transparent;
+    border-color: var(--border-color);
+    color: #adb5bd;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.list-group-item:hover {
+    background-color: rgba(13, 110, 253, 0.2);
+    color: #fff;
+    border-color: var(--primary-dark);
+}
+
+.list-group-item.active {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+    color: #fff;
+}
+
+/* Visor 3D */
+#gldiv {
+    background: linear-gradient(135deg, #1a1d20 0%, #2c3034 100%);
+    border-radius: 0.375rem;
+}
+
+/* Badges personalizados */
+.badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+}
+
+/* Botones */
+.btn {
+    transition: all 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Chat bubbles */
+.chat-message {
+    max-width: 80%;
+    padding: 0.75rem 1rem;
+    border-radius: 1rem;
+    margin-bottom: 0.75rem;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.chat-message.user {
+    background-color: var(--primary-dark);
+    color: #fff;
+    margin-left: auto;
+    border-bottom-right-radius: 0.25rem;
+}
+
+.chat-message.assistant {
+    background-color: #495057;
+    color: #fff;
+    margin-right: auto;
+    border-bottom-left-radius: 0.25rem;
+}
+
+.chat-message.system {
+    background-color: transparent;
+    color: #adb5bd;
+    text-align: center;
+    max-width: 100%;
+    font-style: italic;
+}
+
+/* Tabs personalizados */
+.nav-tabs .nav-link {
+    color: #adb5bd;
+    border-color: var(--border-color);
+}
+
+.nav-tabs .nav-link:hover {
+    border-color: var(--primary-dark);
+    color: #fff;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: var(--bg-darker);
+    border-color: var(--border-color) var(--border-color) var(--bg-darker);
+    color: #fff;
+}
+
+.tab-content {
+    border-color: var(--border-color);
+}
+
+/* Acordeón personalizado */
+.accordion-button {
+    background-color: var(--bg-darker);
+    color: #fff;
+    border-color: var(--border-color);
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: var(--primary-dark);
+    color: #fff;
+}
+
+.accordion-button:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.accordion-item {
+    background-color: transparent;
+    border-color: var(--border-color);
+}
+
+.accordion-body {
+    background-color: var(--bg-darker);
+    color: #adb5bd;
+}
+
+/* Tablas */
+.table-dark {
+    --bs-table-bg: var(--bg-darker);
+    --bs-table-border-color: var(--border-color);
+}
+
+/* Progress bar */
+.progress {
+    background-color: var(--bg-darker);
+    border-radius: 0.5rem;
+}
+
+/* Formularios */
+.form-control {
+    background-color: var(--bg-darker);
+    border-color: var(--border-color);
+    color: #fff;
+}
+
+.form-control:focus {
+    background-color: var(--bg-dark);
+    border-color: var(--primary-dark);
+    color: #fff;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.form-control::placeholder {
+    color: #6c757d;
+}
+
+/* Spinner personalizado */
+.spinner-border {
+    width: 2rem;
+    height: 2rem;
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-darker);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--secondary-dark);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #adb5bd;
+}
+
+/* Panel de profesor */
+#professorPanel {
+    border: 1px solid var(--warning-dark);
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%);
+}
+
+/* Alertas personalizadas */
+.alert {
+    border-radius: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        min-height: auto;
+    }
+    
+    .chat-message {
+        max-width: 90%;
+    }
+    
+    #gldiv {
+        height: 300px;
+    }
+}
+
+/* Animaciones */
+.fade-in {
+    animation: fadeIn 0.5s ease;
+}
+
+.slide-in {
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Utilidades */
+.text-glow {
+    text-shadow: 0 0 10px rgba(13, 110, 253, 0.5);
+}
+
+.border-glow {
+    box-shadow: 0 0 15px rgba(13, 110, 253, 0.3);
+}

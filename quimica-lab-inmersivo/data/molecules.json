@@ -1,0 +1,84 @@
+{
+  "molecules": [
+    {
+      "id": 1,
+      "formula": "CO2",
+      "name": "Dióxido de carbono",
+      "bonding_pairs": 2,
+      "lone_pairs": 0,
+      "geometry": "Lineal",
+      "angle": "180º",
+      "example_of": "CO2, BeCl2"
+    },
+    {
+      "id": 2,
+      "formula": "BF3",
+      "name": "Trifluoruro de boro",
+      "bonding_pairs": 3,
+      "lone_pairs": 0,
+      "geometry": "Trigonal plana",
+      "angle": "120°",
+      "example_of": "BF3, BCl3"
+    },
+    {
+      "id": 3,
+      "formula": "SO2",
+      "name": "Dióxido de azufre",
+      "bonding_pairs": 3,
+      "lone_pairs": 1,
+      "geometry": "Angular",
+      "angle": "<120°",
+      "example_of": "SO2"
+    },
+    {
+      "id": 4,
+      "formula": "CH4",
+      "name": "Metano",
+      "bonding_pairs": 4,
+      "lone_pairs": 0,
+      "geometry": "Tetraédrica",
+      "angle": "109.5°",
+      "example_of": "CH4"
+    },
+    {
+      "id": 5,
+      "formula": "NH3",
+      "name": "Amoníaco",
+      "bonding_pairs": 4,
+      "lone_pairs": 1,
+      "geometry": "Piramidal trigonal",
+      "angle": "<109.5°",
+      "example_of": "PCl3, NH3"
+    },
+    {
+      "id": 6,
+      "formula": "H2O",
+      "name": "Agua",
+      "bonding_pairs": 4,
+      "lone_pairs": 2,
+      "geometry": "Angular",
+      "angle": "104.5°",
+      "example_of": "H2O"
+    },
+    {
+      "id": 7,
+      "formula": "PCl5",
+      "name": "Pentacloruro de fósforo",
+      "bonding_pairs": 5,
+      "lone_pairs": 0,
+      "geometry": "Bipiramidal trigonal",
+      "angle": "90° y 120°",
+      "example_of": "PCl5"
+    },
+    {
+      "id": 8,
+      "formula": "SF6",
+      "name": "Hexafluoruro de azufre",
+      "bonding_pairs": 6,
+      "lone_pairs": 0,
+      "geometry": "Octaédrica",
+      "angle": "90°",
+      "example_of": "SF6"
+    }
+  ]
+}
